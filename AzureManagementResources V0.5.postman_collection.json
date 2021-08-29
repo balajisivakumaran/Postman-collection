@@ -1,0 +1,919 @@
+{
+	"info": {
+		"_postman_id": "6a056cfa-3c05-4e1d-9064-9f4ab186e7ec",
+		"name": "AzureManagementResources V0.5",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "TEST - KeyVault",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var location = responseJson.location;\r",
+							"\r",
+							"var provisioningState = responseJson.properties.provisioningState;\r",
+							"\r",
+							"pm.test(\"Verify the id and availability statuses\", function () {\r",
+							"    \r",
+							"pm.expect(provisioningState).equals('Succeeded')\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify the location details\", function () {\r",
+							"    \r",
+							"pm.expect(location).equals('australiacentral');\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.KeyVault/vaults/jay-test1?api-version=2021-06-01-preview",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.KeyVault",
+						"vaults",
+						"jay-test1"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2021-06-01-preview"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - DiagSettingsNSG",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var metrics = responseJson.properties.metrics;\r",
+							"\r",
+							"var logs = responseJson.properties.logs;\r",
+							"\r",
+							"pm.test(\"Verify the logs category is 'AuditEvent' and the retention enablement is false\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"\r",
+							"var map1 = new Map();\r",
+							"map1.set(\"NetworkSecurityGroupEvent\", false);\r",
+							"map1.set(\"NetworkSecurityGroupRuleCounter\", false);\r",
+							"\r",
+							"var map2 = new Map();\r",
+							"\r",
+							"for (i = 0; i < logs.length; i++) {\r",
+							"  \r",
+							"    var logsName = logs[i].category;\r",
+							"\r",
+							"    var retentionEnablement = logs[i].retentionPolicy.enabled;\r",
+							"\r",
+							"    map2.set(logsName, retentionEnablement);\r",
+							"\r",
+							"    //pm.expect(logsName).eql('NetworkSecurityGroupEvent');\r",
+							"\r",
+							"    //pm.expect(logsName).eql('NetworkSecurityGroupRuleCounter');\r",
+							"\r",
+							"    pm.expect(retentionEnablement).eql(false);\r",
+							"\r",
+							"    console.log(\"The metrics name is: \" + logsName +\"\\n\"+\"\\n\"+ \"The retention policy enablement is : \" +\"\\n\"+ retentionEnablement);\r",
+							"\r",
+							"}\r",
+							"\r",
+							"map1.forEach((keys1,values1) => {\r",
+							"    map2.forEach((keys2, values2) => {\r",
+							"\r",
+							"        if((values1.has(values2)) != false)\r",
+							"        {\r",
+							"            console.log(values2,keys2);\r",
+							"            console.log(values1,keys1);\r",
+							"        }\r",
+							"    })\r",
+							"})\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupNetwork}}/providers/Microsoft.Network/networkSecurityGroups/{{networkSecurityGroup}}/providers/Microsoft.Insights/diagnosticSettings/setByPolicy?api-version=2017-05-01-preview",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupNetwork}}",
+						"providers",
+						"Microsoft.Network",
+						"networkSecurityGroups",
+						"{{networkSecurityGroup}}",
+						"providers",
+						"Microsoft.Insights",
+						"diagnosticSettings",
+						"setByPolicy"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2017-05-01-preview"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - DiagSettingsFunctionsApp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var metrics = responseJson.properties.metrics;\r",
+							"\r",
+							"var logs = responseJson.properties.logs;\r",
+							"\r",
+							"pm.test(\"Verify the metrics category is 'AllMetrics' and the retention enablement is false\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"\r",
+							"for (i = 0; i < metrics.length; i++) {\r",
+							"  \r",
+							"    var metricsName = metrics[i].category;\r",
+							"\r",
+							"    var retentionEnablement = metrics[i].retentionPolicy.enabled;\r",
+							"\r",
+							"    pm.expect(metricsName).eql('AllMetrics');\r",
+							"\r",
+							"    pm.expect(retentionEnablement).eql(false);\r",
+							"\r",
+							"    console.log(\"The metrics name is: \" + metricsName +\"\\n\"+\"\\n\"+ \"The retention policy enablement is : \" +\"\\n\"+ retentionEnablement);\r",
+							"\r",
+							"}\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify the logs category is 'FunctionAppLogs' and the retention enablement is false\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"\r",
+							"for (i = 0; i < logs.length; i++) {\r",
+							"  \r",
+							"    var logsName = logs[i].category;\r",
+							"\r",
+							"    var retentionEnablement = logs[i].retentionPolicy.enabled;\r",
+							"\r",
+							"    pm.expect(logsName).eql('FunctionAppLogs');\r",
+							"\r",
+							"    pm.expect(retentionEnablement).eql(false);\r",
+							"\r",
+							"    console.log(\"The logs name is: \" + logsName +\"\\n\"+\"\\n\"+ \"The retention policy enablement is : \" +\"\\n\"+ retentionEnablement);\r",
+							"\r",
+							"}\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupCip}}/providers/Microsoft.Web/sites/{{cipFA}}/providers/Microsoft.Insights/diagnosticSettings/setByPolicy?api-version=2017-05-01-preview",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupCip}}",
+						"providers",
+						"Microsoft.Web",
+						"sites",
+						"{{cipFA}}",
+						"providers",
+						"Microsoft.Insights",
+						"diagnosticSettings",
+						"setByPolicy"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2017-05-01-preview"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - UpdateVnetPeering",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var policyAssignments = responseJson.error.additionalInfo;\r",
+							"\r",
+							"pm.test(\"Test to display if the Vnetpeering update is denied with the policy rule - enforceAllowedResourceTypesAssignment\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"\r",
+							"for (i = 0; i < policyAssignments.length; i++) {\r",
+							"  \r",
+							"    var policyAssignmentName = responseJson.error.additionalInfo[i].info.policyDefinitionDisplayName;\r",
+							"\r",
+							"    if(policyAssignmentName.includes(\"enforceVnetPeeringAssignment\"))\r",
+							"    {\r",
+							"        console.log(\"Test Passed with the \"+ policyAssignmentName +\" name returned\")\r",
+							"    }\r",
+							"\r",
+							"}\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"properties\": {\r\n    \"allowVirtualNetworkAccess\": true,\r\n    \"allowForwardedTraffic\": true,\r\n    \"allowGatewayTransit\": false,\r\n    \"useRemoteGateways\": false,\r\n    \"remoteVirtualNetwork\": {\r\n      \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupNetwork}}/providers/Microsoft.Network/virtualNetworks/{{virtualNetworkAtmT1}}\"\r\n    }\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupNetwork}}/providers/Microsoft.Network/virtualNetworks/{{virtualNetworkAtmT1}}/virtualNetworkPeerings/{{IncorrectVnetPeer}}?api-version=2020-11-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupNetwork}}",
+						"providers",
+						"Microsoft.Network",
+						"virtualNetworks",
+						"{{virtualNetworkAtmT1}}",
+						"virtualNetworkPeerings",
+						"{{IncorrectVnetPeer}}"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-11-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - CreateVnetPeering",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var policyAssignments = responseJson.error.additionalInfo;\r",
+							"\r",
+							"pm.test(\"Test to display if the Vnetpeering create is denied with the policy rule - enforceAllowedResourceTypesAssignment\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"\r",
+							"for (i = 0; i < policyAssignments.length; i++) {\r",
+							"  \r",
+							"    var policyAssignmentName = responseJson.error.additionalInfo[i].info.policyDefinitionDisplayName;\r",
+							"\r",
+							"    if(policyAssignmentName.includes(\"enforceAllowedResourceTypesAssignment\"))\r",
+							"    {\r",
+							"        console.log(\"Test Passed with the \"+ policyAssignmentName +\" name returned\")\r",
+							"    }\r",
+							"\r",
+							"}\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"properties\": {\r\n    \"allowVirtualNetworkAccess\": true,\r\n    \"allowForwardedTraffic\": true,\r\n    \"allowGatewayTransit\": false,\r\n    \"useRemoteGateways\": false,\r\n    \"remoteVirtualNetwork\": {\r\n      \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupNetwork}}/providers/Microsoft.Network/virtualNetworks/{{virtualNetworkAtmT1}}\"\r\n    }\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupNetwork}}/providers/Microsoft.Network/virtualNetworks/{{virtualNetworkAtmT1}}/virtualNetworkPeerings/TestCreateVnetPeering?api-version=2020-11-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupNetwork}}",
+						"providers",
+						"Microsoft.Network",
+						"virtualNetworks",
+						"{{virtualNetworkAtmT1}}",
+						"virtualNetworkPeerings",
+						"TestCreateVnetPeering"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-11-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - ResourceHealthCip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var values = responseJson.value;\r",
+							"\r",
+							"pm.test(\"Verify the id and availability statuses\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"\r",
+							"for (i = 0; i < values.length; i++) {\r",
+							"  \r",
+							"    var id = values[i].id;\r",
+							"\r",
+							"    var availabilityState = values[i].properties.availabilityState;\r",
+							"\r",
+							"    console.log(\"The id is : \" +\"\\n\"+ id +\"\\n\"+\"\\n\"+ \"The availability state is : \" +\"\\n\"+ availabilityState);\r",
+							"\r",
+							"}\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupCip}}/providers/Microsoft.ResourceHealth/availabilityStatuses?api-version=2020-05-01-preview",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupCip}}",
+						"providers",
+						"Microsoft.ResourceHealth",
+						"availabilityStatuses"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-05-01-preview"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - AppGwPrivateFrontendIp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupCip}}/providers/Microsoft.Network/applicationGateways/vdc-cip-agw-01?api-version=2019-06-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupCip}}",
+						"providers",
+						"Microsoft.Network",
+						"applicationGateways",
+						"vdc-cip-agw-01"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2019-06-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - VirtualMachineExtensions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var responseValues = responseJson.value;\r",
+							"\r",
+							"pm.test(\"Verify if the expected list of extensions matches with the actual list of extensions in a virtual machine\", function () {\r",
+							"  var expectedExtensionsList = [\r",
+							"    \"DependencyAgentWindows\",\r",
+							"    \"IaaSAntimalware\"];\r",
+							"\r",
+							"  var actualExtensionsList = [];\r",
+							"\r",
+							"for (i = 0; i < responseValues.length; i++) {\r",
+							"\r",
+							"var extensionName = responseJson.value[i].name;\r",
+							"\r",
+							"actualExtensionsList.push(extensionName)\r",
+							"    \r",
+							"} \r",
+							"\r",
+							"console.log(actualExtensionsList)\r",
+							"\r",
+							"pm.expect(expectedExtensionsList).to.eql(actualExtensionsList);\r",
+							"\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Compute/virtualMachines/WEIRDTESTMACHINE/extensions?api-version=2021-04-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.Compute",
+						"virtualMachines",
+						"WEIRDTESTMACHINE",
+						"extensions"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2021-04-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - Loadbalancer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var additionalInfo = responseJson.error.additionalInfo;\r",
+							"\r",
+							"pm.test(\"Test to display if the location update is denied with the policy rule - denyPublicIPforLoadBalancer\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"\r",
+							"for (i = 0; i < additionalInfo.length; i++) {\r",
+							"  \r",
+							"    var policyAssignmentName = additionalInfo[i].info.policyDefinitionDisplayName\r",
+							"\r",
+							"    if(policyAssignmentName.includes(\"denyPublicIPforLoadBalancer\"))\r",
+							"    {\r",
+							"        console.log(\"Test Passed with the \"+ policyAssignmentName +\" name returned\")\r",
+							"    }\r",
+							"\r",
+							"}\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"location\": \"australiacentral\",\r\n  \"sku\": {\r\n    \"name\": \"Standard\"\r\n  },\r\n  \"tags\": {\r\n      \"costCentre\": \"14483\"\r\n    },\r\n  \"properties\": {\r\n    \"frontendIPConfigurations\": [\r\n      {\r\n        \"name\": \"fe-lb\",\r\n        \"properties\": {\r\n          \"publicIPAddress\": {\r\n            \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/publicIPAddresses/TestingpublicIP\"\r\n          }\r\n        }\r\n      }\r\n    ],\r\n    \"backendAddressPools\": [\r\n      {\r\n        \"name\": \"be-lb\",\r\n        \"properties\": {}\r\n      }\r\n    ],\r\n    \"loadBalancingRules\": [\r\n      {\r\n        \"name\": \"rulelb\",\r\n        \"properties\": {\r\n          \"frontendIPConfiguration\": {\r\n            \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/loadBalancers/TestingLoadbalancer/frontendIPConfigurations/fe-lb\"\r\n          },\r\n          \"backendAddressPool\": {\r\n            \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/loadBalancers/TestingLoadbalancer/backendAddressPools/be-lb\"\r\n          },\r\n          \"probe\": {\r\n            \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/loadBalancers/TestingLoadbalancer/probes/probe-lb\"\r\n          },\r\n          \"protocol\": \"Tcp\",\r\n          \"loadDistribution\": \"Default\",\r\n          \"frontendPort\": 80,\r\n          \"backendPort\": 80,\r\n          \"idleTimeoutInMinutes\": 15,\r\n          \"enableFloatingIP\": true,\r\n          \"disableOutboundSnat\": true\r\n        }\r\n      }\r\n    ],\r\n    \"probes\": [\r\n      {\r\n        \"name\": \"probe-lb\",\r\n        \"properties\": {\r\n          \"protocol\": \"Http\",\r\n          \"port\": 80,\r\n          \"requestPath\": \"healthcheck.aspx\",\r\n          \"intervalInSeconds\": 15,\r\n          \"numberOfProbes\": 2\r\n        }\r\n      }\r\n    ],\r\n    \"inboundNatRules\": [\r\n      {\r\n        \"name\": \"in-nat-rule\",\r\n        \"properties\": {\r\n          \"frontendIPConfiguration\": {\r\n            \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/loadBalancers/TestingLoadbalancer/frontendIPConfigurations/fe-lb\"\r\n          },\r\n          \"frontendPort\": 3389,\r\n          \"backendPort\": 3389,\r\n          \"enableFloatingIP\": true,\r\n          \"idleTimeoutInMinutes\": 15,\r\n          \"protocol\": \"Tcp\"\r\n        }\r\n      }\r\n    ],\r\n    \"inboundNatPools\": [],\r\n    \"outboundRules\": [\r\n      {\r\n        \"name\": \"rule1\",\r\n        \"properties\": {\r\n          \"backendAddressPool\": {\r\n            \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/loadBalancers/TestingLoadbalancer/backendAddressPools/be-lb\"\r\n          },\r\n          \"frontendIPConfigurations\": [\r\n            {\r\n              \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/loadBalancers/TestingLoadbalancer/frontendIPConfigurations/fe-lb\"\r\n            }\r\n          ],\r\n          \"protocol\": \"All\"\r\n        }\r\n      }\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/loadBalancers/TestingLoadBalancer1?api-version=2021-02-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.Network",
+						"loadBalancers",
+						"TestingLoadBalancer1"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2021-02-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - DiagSettingsKeyVault",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var metrics = responseJson.properties.metrics;\r",
+							"\r",
+							"var logs = responseJson.properties.logs;\r",
+							"\r",
+							"pm.test(\"Verify the metrics category is 'AllMetrics' and the retention enablement is false\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"\r",
+							"for (i = 0; i < metrics.length; i++) {\r",
+							"  \r",
+							"    var metricsName = metrics[i].category;\r",
+							"\r",
+							"    var retentionEnablement = metrics[i].retentionPolicy.enabled;\r",
+							"\r",
+							"    pm.expect(metricsName).eql('AllMetrics');\r",
+							"\r",
+							"    pm.expect(retentionEnablement).eql(false);\r",
+							"\r",
+							"    console.log(\"The metrics name is: \" + metricsName +\"\\n\"+\"\\n\"+ \"The retention policy enablement is : \" +\"\\n\"+ retentionEnablement);\r",
+							"\r",
+							"}\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify the logs category is 'AuditEvent' and the retention enablement is false\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"\r",
+							"for (i = 0; i < logs.length; i++) {\r",
+							"  \r",
+							"    var logsName = logs[i].category;\r",
+							"\r",
+							"    var retentionEnablement = logs[i].retentionPolicy.enabled;\r",
+							"\r",
+							"    pm.expect(logsName).eql('AuditEvent');\r",
+							"\r",
+							"    pm.expect(retentionEnablement).eql(false);\r",
+							"\r",
+							"    console.log(\"The metrics name is: \" + logsName +\"\\n\"+\"\\n\"+ \"The retention policy enablement is : \" +\"\\n\"+ retentionEnablement);\r",
+							"\r",
+							"}\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.KeyVault/vaults/{{KeyVaultName}}/providers/Microsoft.Insights/diagnosticSettings/setByPolicy?api-version=2017-05-01-preview",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.KeyVault",
+						"vaults",
+						"{{KeyVaultName}}",
+						"providers",
+						"Microsoft.Insights",
+						"diagnosticSettings",
+						"setByPolicy"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2017-05-01-preview"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - DiagSettingsAppGateway",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var metrics = responseJson.properties.metrics;\r",
+							"\r",
+							"var logs = responseJson.properties.logs;\r",
+							"\r",
+							"pm.test(\"Verify the metrics category is 'AllMetrics' and the retention enablement is false\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"\r",
+							"for (i = 0; i < metrics.length; i++) {\r",
+							"  \r",
+							"    var metricsName = metrics[i].category;\r",
+							"\r",
+							"    var retentionEnablement = metrics[i].retentionPolicy.enabled;\r",
+							"\r",
+							"    pm.expect(metricsName).eql('AllMetrics');\r",
+							"\r",
+							"    pm.expect(retentionEnablement).eql(false);\r",
+							"\r",
+							"    console.log(\"The metrics name is: \" + metricsName +\"\\n\"+\"\\n\"+ \"The retention policy enablement is : \" +\"\\n\"+ retentionEnablement);\r",
+							"\r",
+							"}\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify the logs category is 'FunctionAppLogs' and the retention enablement is false\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"var map1;\r",
+							"\r",
+							"var map2 = new Map();\r",
+							"map2.set('ApplicationGatewayAccessLog',true);\r",
+							"map2.set('ApplicationGatewayPerformanceLog',true);\r",
+							"map2.set('ApplicationGatewayFirewallLog',true);\r",
+							"\r",
+							"for (i = 0; i < logs.length; i++) {\r",
+							"  \r",
+							"    var logsName = logs[i].category;\r",
+							"\r",
+							"    var retentionEnablement = logs[i].retentionPolicy.enabled;\r",
+							"\r",
+							"    map1 = new Map();\r",
+							"    map1.set(logsName, retentionEnablement);\r",
+							"\r",
+							"     map2.forEach((keys1,values1) =>{\r",
+							"         map1.forEach((keys2,values2)=>\r",
+							"         {\r",
+							"             if(values1.has(values2))\r",
+							"             {\r",
+							"                 console.log(keys1, values1);\r",
+							"                 console.log(keys2, values2);\r",
+							"             }\r",
+							"         })\r",
+							"\r",
+							"     })\r",
+							"\r",
+							"    console.log(\"The logs name is: \" + logsName +\"\\n\"+\"\\n\"+ \"The retention policy enablement is : \" +\"\\n\"+ retentionEnablement);\r",
+							"\r",
+							"}\r",
+							"\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupCip}}/providers/Microsoft.Network/applicationGateways/{{cipAgw}}/providers/Microsoft.Insights/diagnosticSettings/setByPolicy?api-version=2017-05-01-preview",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupCip}}",
+						"providers",
+						"Microsoft.Network",
+						"applicationGateways",
+						"{{cipAgw}}",
+						"providers",
+						"Microsoft.Insights",
+						"diagnosticSettings",
+						"setByPolicy"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2017-05-01-preview"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

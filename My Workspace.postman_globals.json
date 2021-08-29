@@ -1,0 +1,154 @@
+{
+	"id": "146e52f0-fd32-4814-8e58-8a3c0f4d5eb7",
+	"values": [
+		{
+			"key": "directoryID",
+			"value": "a99933ff-07df-4995-a738-1b90a2c54f16",
+			"enabled": true
+		},
+		{
+			"key": "clientID",
+			"value": "c618abcc-224a-4460-ab58-a95b2f0d30f9",
+			"enabled": true
+		},
+		{
+			"key": "clientSecret",
+			"value": " 2I7FOuypg._7Z91_3bV~TqyBNZ2Imlw_M7",
+			"enabled": true
+		},
+		{
+			"key": "azureManagementUri",
+			"value": "https://management.azure.com",
+			"enabled": true
+		},
+		{
+			"key": "microsoftLoginUri",
+			"value": "https://login.microsoftonline.com",
+			"enabled": true
+		},
+		{
+			"key": "token",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "resourceGroup",
+			"value": "t1-auc-wkl-test-vdc-rg-01",
+			"enabled": true
+		},
+		{
+			"key": "subscriptionID",
+			"value": "a0428998-761f-4804-9f0f-f0002a02533b",
+			"enabled": true
+		},
+		{
+			"key": "resourceGroupTry",
+			"value": "t0-auc-idt-network-vdc-rg-01",
+			"enabled": true
+		},
+		{
+			"key": "virtualNetworkPeeringName",
+			"value": "nzdf-vdc-wkl-t1-01-aue-vnet-01--nzdf-vdc-hub-t0-01-auc-vnet-01--peering",
+			"enabled": true
+		},
+		{
+			"key": "virtualNetwork",
+			"value": "nzdf-vdc-wkl-t1-01-auc-vnet-01",
+			"enabled": true
+		},
+		{
+			"key": "IncorrectVnetPeer",
+			"value": "nzdf-vdc-wkl-mgmt-t1-01-auc-vnet-01--nzdf-vdc-hub-t0-01-auc-vnet-01--peering",
+			"enabled": true
+		},
+		{
+			"key": "resourceGroupNetwork",
+			"value": "t1-auc-wkl-network-vdc-rg-01",
+			"enabled": true
+		},
+		{
+			"key": "subNet",
+			"value": "vdc-testing-sn-01",
+			"enabled": true
+		},
+		{
+			"key": "networkInterfaceName",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "virtualNetworkAtmT1",
+			"value": "nzdf-vdc-atm-t1-01-auc-vnet-01",
+			"enabled": true
+		},
+		{
+			"key": "resourceGroupDeploy",
+			"value": "t1-auc-wkl-deploy-vdc-rg-01",
+			"enabled": true
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "networkSecurityGroup",
+			"value": "nzdf-vdc-wkl-t1-01-auc-vnet-01-vdc-testing-sn-01-nsg",
+			"enabled": true
+		},
+		{
+			"key": "routeTableId",
+			"value": "nzdf-vdc-wkl-t1-01-auc-vnet-01-vdc-testing-sn-01-rt",
+			"enabled": true
+		},
+		{
+			"key": "resourceGroupCip",
+			"value": "t1-auc-clp-cip-vdc-rg-01",
+			"enabled": true
+		},
+		{
+			"key": "resourceGroupIdt",
+			"value": "t0-auc-idt-network-vdc-rg-01",
+			"enabled": true
+		},
+		{
+			"key": "resourceGroupAadConnect",
+			"value": "t0-auc-idt-aadconnect-vdc-rg-01",
+			"enabled": true
+		},
+		{
+			"key": "resourceGroupWklShared",
+			"value": "t1-auc-wkl-shared-vdc-rg-01",
+			"enabled": true
+		},
+		{
+			"key": "azrGlbHubSubscriptionId",
+			"value": "ed52e030-696b-4590-ac41-6bf904f109d2",
+			"enabled": true
+		},
+		{
+			"key": "networkResourceGroup",
+			"value": "t0-auc-hub-network-vdc-rg-01",
+			"enabled": true
+		},
+		{
+			"key": "KeyVaultName",
+			"value": "jay-test1",
+			"enabled": true
+		},
+		{
+			"key": "cipFA",
+			"value": "cip-functions-vdc",
+			"enabled": true
+		},
+		{
+			"key": "cipAgw",
+			"value": "vdc-wa-agw-cip-01",
+			"enabled": true
+		}
+	],
+	"name": "My Workspace Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2021-08-16T20:41:15.861Z",
+	"_postman_exported_using": "Postman/8.10.0"
+}

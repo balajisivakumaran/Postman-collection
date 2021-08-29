@@ -1,0 +1,1332 @@
+{
+	"info": {
+		"_postman_id": "bef21924-60cb-4c5c-9828-c5d41bf2589b",
+		"name": "AzureManagementResources V0.4",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "TEST - VirtualMachinesUnderResourceGroup",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var responseValues = responseJson.value\r",
+							"\r",
+							"pm.test(\"Verify if the license type is windows server\",() => {\r",
+							"\r",
+							"    for(i=0; i < responseValues.length; i++)\r",
+							"    {\r",
+							"        var licenseType = responseValues[i].properties.licenseType;\r",
+							"\r",
+							"        console.log(\"The license type we have is : \" +licenseType)\r",
+							"\r",
+							"        pm.expect(licenseType).to.equal(\"Windows_Server\");\r",
+							"    }\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Compute/virtualMachines?api-version=2020-12-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.Compute",
+						"virtualMachines"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-12-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - VirtualMachinesUnderSubscriptions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var responseValues = responseJson.value;\r",
+							"\r",
+							"pm.test(\"Verify if the user can make a list out of the virtual machines, sizes and compare it with the pre-defined map list\", function () {\r",
+							"\r",
+							"    var map1 = new Map();\r",
+							"    map1.set(\"VDAUCT1MGWBVM02\",\"Standard_D2d_v4\");\r",
+							"    map1.set(\"TESTINGMACHINE001\",\"Standard_D1_v2\");\r",
+							"    map1.set(\"WEIRDTESTMACHINE\",\"Standard_D1_v2\");\r",
+							"    map1.set(\"crapped\",\"Standard_DS1_v2\");\r",
+							"    map1.set(\"VDAUCSWREPOVM01\",\"Standard_D4ds_v4\");\r",
+							"    map1.set(\"VDAUCAUGOVM01\",\"Standard_D3_v2\");\r",
+							"    map1.set(\"VDAUCCITADCVM01\",\"Standard_B2ms\");\r",
+							"    map1.set(\"VDAUCCITADCVM02\",\"Standard_B2ms\");\r",
+							"    map1.set(\"deaucgd1ap01\",\"Standard_D4s_v3\");\r",
+							"    map1.set(\"deaucgd1db01\",\"Standard_D4s_v3\");\r",
+							"    map1.set(\"deaucwd1ap01\",\"Standard_D4s_v3\");\r",
+							"    map1.set(\"deaucwd1ap02\",\"Standard_D4s_v3\");\r",
+							"    map1.set(\"VDAUCT1MGBRVM01\",\"Standard_D2d_v4\");\r",
+							"    map1.set(\"VDAUCT1MGHOVM01\",\"Standard_D2d_v4\");\r",
+							"    map1.set(\"VDAUCT1MGHOVM02\",\"Standard_D2d_v4\");\r",
+							"    map1.set(\"VDAUCT1MGWBVM01\",\"Standard_D2d_v4\");\r",
+							"\r",
+							"    var map2 = new Map();\r",
+							"    \r",
+							"    for (i = 0; i < responseValues.length; i++) {\r",
+							"\r",
+							"        var virtualMachineNames = responseJson.value[i].name;\r",
+							"\r",
+							"        var virtualMachineSizes = responseJson.value[i].properties.hardwareProfile.vmSize;\r",
+							"\r",
+							"        map2.set(virtualMachineNames, virtualMachineSizes);\r",
+							"\r",
+							"    }\r",
+							"\r",
+							"    console.log(map1);\r",
+							"    console.log(map2);\r",
+							"\r",
+							"    //pm.expect(map1).to.eql(map2);\r",
+							"\r",
+							"    map2.forEach((keys2,values2)=>{\r",
+							"      \r",
+							"        map1.forEach((keys1,values1)=>{\r",
+							"\r",
+							"            if((values2.has(values1))  != false)\r",
+							"            {\r",
+							"                console.log(keys2, values2)\r",
+							"            }\r",
+							"\r",
+							"        })\r",
+							"\r",
+							"    })\r",
+							"\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/providers/Microsoft.Compute/virtualMachines?api-version=2020-12-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"providers",
+						"Microsoft.Compute",
+						"virtualMachines"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-12-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - VirtualNetworksNSGId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var lenSubnets = responseJson.properties.subnets\r",
+							"\r",
+							"pm.test(\"NSG id should not be null in the virtual networks\", () => {\r",
+							"\r",
+							"for (i = 0; i < lenSubnets.length; i++) {\r",
+							"\r",
+							"        var nsgId = lenSubnets[i].properties.networkSecurityGroup.id;\r",
+							"\r",
+							"        console.log(nsgId);\r",
+							"\r",
+							"    }\r",
+							"\r",
+							"    pm.expect(nsgId).not.to.eql(null);\r",
+							"\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupNetwork}}/providers/Microsoft.Network/virtualNetworks/{{virtualNetwork}}?api-version=2020-11-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupNetwork}}",
+						"providers",
+						"Microsoft.Network",
+						"virtualNetworks",
+						"{{virtualNetwork}}"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-11-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - SubnetRouteTableId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var routeTableId = responseJson.properties.routeTable.id;\r",
+							"\r",
+							"pm.test(\"Route table id should not be null\", () => {\r",
+							"\r",
+							"pm.expect(routeTableId).not.to.eql(null);\r",
+							"\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupNetwork}}/providers/Microsoft.Network/virtualNetworks/{{virtualNetwork}}/subnets/{{subNet}}?api-version=2020-11-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupNetwork}}",
+						"providers",
+						"Microsoft.Network",
+						"virtualNetworks",
+						"{{virtualNetwork}}",
+						"subnets",
+						"{{subNet}}"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-11-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - SubnetRouteTableIdUpdate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var routeTableId = responseJson.properties.routeTable.id;\r",
+							"\r",
+							"pm.test(\"Route table id should not be null\", () => {\r",
+							"\r",
+							"pm.expect(routeTableId).not.to.eql(null);\r",
+							"\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"properties\": {\r\n    \"addressPrefix\": \"10.31.128.0/28\",\r\n    \"networkSecurityGroup\": {\r\n            \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupNetwork}}/providers/Microsoft.Network/networkSecurityGroups/{{networkSecurityGroup}}\"\r\n        },\r\n        \"routeTable\": {\r\n            \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupNetwork}}/providers/Microsoft.Network/routeTables/{{routeTableId}}\"\r\n        }\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupNetwork}}/providers/Microsoft.Network/virtualNetworks/{{virtualNetwork}}/subnets/{{subNet}}?api-version=2020-11-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupNetwork}}",
+						"providers",
+						"Microsoft.Network",
+						"virtualNetworks",
+						"{{virtualNetwork}}",
+						"subnets",
+						"{{subNet}}"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-11-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - NetworkInterface",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/networkInterfaces/testmachine525?api-version=2020-11-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.Network",
+						"networkInterfaces",
+						"testmachine525"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-11-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - StorageAccountsVirtualNetworksRules",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var networkRules = responseJson.properties.networkAcls.virtualNetworkRules;\r",
+							"\r",
+							"pm.test(\"Verify if the network rule id not NULL on a storage account\", function () {\r",
+							"\r",
+							"for (i = 0; i < networkRules.length; i++) {\r",
+							"\r",
+							"    const networkRuleId = networkRules[i].id;\r",
+							"\r",
+							"    if(networkRuleId !== null || '')\r",
+							"    {\r",
+							"        console.log(networkRuleId, \"Test Passed without null return\")\r",
+							"        return typeof networkRuleId;\r",
+							"    }\r",
+							"    \r",
+							"}\r",
+							"}); "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupDeploy}}/providers/Microsoft.Storage/storageAccounts/nzdfauct1testingvdc01?api-version=2021-04-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupDeploy}}",
+						"providers",
+						"Microsoft.Storage",
+						"storageAccounts",
+						"nzdfauct1testingvdc01"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2021-04-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - VirtualMachineExtensions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var responseValues = responseJson.value;\r",
+							"\r",
+							"pm.test(\"Verify if the expected list of extensions matches with the actual list of extensions in a virtual machine\", function () {\r",
+							"  var expectedExtensionsList = [\r",
+							"    \"DependencyAgentWindows\",\r",
+							"    \"IaaSAntimalware\"];\r",
+							"\r",
+							"  var actualExtensionsList = [];\r",
+							"\r",
+							"for (i = 0; i < responseValues.length; i++) {\r",
+							"\r",
+							"var extensionName = responseJson.value[i].name;\r",
+							"\r",
+							"actualExtensionsList.push(extensionName)\r",
+							"    \r",
+							"} \r",
+							"\r",
+							"console.log(actualExtensionsList)\r",
+							"\r",
+							"pm.expect(expectedExtensionsList).to.eql(actualExtensionsList);\r",
+							"\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Compute/virtualMachines/WEIRDTESTMACHINE/extensions?api-version=2021-04-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.Compute",
+						"virtualMachines",
+						"WEIRDTESTMACHINE",
+						"extensions"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2021-04-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - SupportHttpsTrafficOnly",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var httpTraffic = responseJson.properties.supportsHttpsTrafficOnly;\r",
+							"\r",
+							"pm.test(\"Verify if the storage account is configured to setup HTTPSTrafficOnly\", function () {\r",
+							"\r",
+							"console.log(httpTraffic);\r",
+							"\r",
+							"if(httpTraffic != true)\r",
+							"console.log(\"Test failed\");\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupDeploy}}/providers/Microsoft.Storage/storageAccounts/nzdfauct1kimdeasvdc01?api-version=2021-04-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupDeploy}}",
+						"providers",
+						"Microsoft.Storage",
+						"storageAccounts",
+						"nzdfauct1kimdeasvdc01"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2021-04-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - EnableBlobEncryption",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var blob = responseJson.properties.encryption.services.blob;\r",
+							"\r",
+							"var blobEnabled = responseJson.properties.encryption.services.blob.enabled;\r",
+							"\r",
+							"console.log(blobEnabled);\r",
+							"\r",
+							"pm.test(\"Verify if the blob encryption is enabled on the storage accounts\", function () {\r",
+							"//Expected JSON response value\r",
+							"pm.expect(blobEnabled).to.eql(true);\r",
+							"\r",
+							"/*if(blobEnabled != true)\r",
+							"return false;\r",
+							"console.log(blobEnabled, blob);\r",
+							"*/\r",
+							"\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupDeploy}}/providers/Microsoft.Storage/storageAccounts/nzdfauct1kimdeasvdc01?api-version=2021-04-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroupDeploy}}",
+						"providers",
+						"Microsoft.Storage",
+						"storageAccounts",
+						"nzdfauct1kimdeasvdc01"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2021-04-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - Location Update - VirtualMachines",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var policyAssignments = responseJson.error.additionalInfo;\r",
+							"\r",
+							"var permittedRegions = responseJson.error.additionalInfo[0].info.evaluationDetails.evaluatedExpressions[1].targetValue;\r",
+							"\r",
+							"pm.test(\"Test to display if the location update is denied with the policy rule - permittedRegions\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"\r",
+							"for (i = 0; i < policyAssignments.length; i++) {\r",
+							"  \r",
+							"    var policyAssignmentName = responseJson.error.additionalInfo[i].info.policyDefinitionDisplayName;\r",
+							"\r",
+							"    if(policyAssignmentName.includes(\"permittedRegions\"))\r",
+							"    {\r",
+							"        console.log(\"Test Passed with the \"+ policyAssignmentName +\" name returned\")\r",
+							"    }\r",
+							"\r",
+							"}\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Display the allowed permitted regions\", function () {\r",
+							"\r",
+							"for (var i = 0; i < policyAssignments.length; i++) {\r",
+							"      \r",
+							"    var policyEvaluatedExpressions = responseJson.error.additionalInfo[i].info.evaluationDetails.evaluatedExpressions;\r",
+							"\r",
+							"    for (var j=0; j < policyEvaluatedExpressions.length; j++)\r",
+							"    {\r",
+							"            var targetValues = policyEvaluatedExpressions[j].targetValue;\r",
+							"\r",
+							"            if(policyEvaluatedExpressions[j].path ==  'location')\r",
+							"            console.log(targetValues);       \r",
+							"    }\r",
+							"}\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"location\": \"westus\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Compute/virtualMachines/WEIRDTESTMACHINE?api-version=2020-12-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.Compute",
+						"virtualMachines",
+						"WEIRDTESTMACHINE"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-12-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - VirtualMachines",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"location\": \"australiacentral\",\r\n  \"properties\": {\r\n    \"hardwareProfile\": {\r\n      \"vmSize\": \"Standard_D2s_v3\"\r\n    },\r\n    \"storageProfile\": {\r\n      \"imageReference\": {\r\n        \"sku\": \"16.04-LTS\",\r\n        \"publisher\": \"Canonical\",\r\n        \"version\": \"latest\",\r\n        \"offer\": \"UbuntuServer\"\r\n      },\r\n      \"osDisk\": {\r\n        \"caching\": \"ReadWrite\",\r\n        \"managedDisk\": {\r\n          \"storageAccountType\": \"Premium_LRS\"\r\n        },\r\n        \"name\": \"myVMosdisk\",\r\n        \"createOption\": \"FromImage\"\r\n      }\r\n    },\r\n    \"osProfile\": {\r\n      \"adminUsername\": \"balaji.sivakumaran@vdc.xie.mil.nz\",\r\n      \"computerName\": \"TestMachine\",\r\n      \"adminPassword\": \"Tester99\",\r\n      \"linuxConfiguration\": {\r\n        \"provisionVMAgent\": true,\r\n        \"patchSettings\": {\r\n          \"patchMode\": \"ImageDefault\"\r\n        }\r\n      }\r\n    },\r\n    \"networkProfile\": {\r\n      \"networkInterfaces\": [\r\n        {\r\n          \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/networkInterfaces/NetworkinterfaceTest\",\r\n          \"properties\": {\r\n            \"primary\": true\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Compute/virtualMachines/TestMachine?api-version=2020-12-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.Compute",
+						"virtualMachines",
+						"TestMachine"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-12-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - PrivateNetworkInterface",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();\r",
+							"\r",
+							"pm.globals.set(\"networkInterfaceName\", responseJson.name);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"name\": \"TestingNetworkInterface11\",\r\n \"location\": \"australiacentral\",\r\n  \"properties\": {\r\n    \"enableAcceleratedNetworking\": false,\r\n    \"ipConfigurations\": [\r\n      {\r\n        \"name\": \"ipconfig1\",\r\n        \"properties\": {\r\n          \"privateIpAddressVersion\": \"IPv4\",\r\n          \"privateIPAllocationMethod\": \"Dynamic\",\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroupNetwork}}/providers/Microsoft.Network/virtualNetworks/{{virtualNetwork}}/subnets/{{subNet}}\"\r\n          }\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"tags\": {\r\n    \"costCentre\": \"14483\"\r\n    }\r\n}\r\n\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/networkInterfaces/TestingNetworkInterface11?api-version=2021-02-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.Network",
+						"networkInterfaces",
+						"TestingNetworkInterface11"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2021-02-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - WindowsVirtualMachines",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"location\": \"australiacentral\",\r\n  \"properties\": {\r\n    \"hardwareProfile\": {\r\n      \"vmSize\": \"Standard_D1_v2\"\r\n    },\r\n    \"storageProfile\": {\r\n      \"imageReference\": {\r\n        \"sku\": \"2019-Datacenter\",\r\n        \"publisher\": \"MicrosoftWindowsServer\",\r\n        \"version\": \"latest\",\r\n        \"offer\": \"WindowsServer\"\r\n      },\r\n      \"osDisk\": {\r\n        \"caching\": \"ReadWrite\",\r\n        \"managedDisk\": {\r\n          \"storageAccountType\": \"Standard_LRS\"\r\n        },\r\n        \"name\": \"myVMosdisk12\",\r\n        \"createOption\": \"FromImage\"\r\n      }\r\n      \r\n    },\r\n    \"osProfile\": {\r\n      \"adminUsername\": \"Balaji\",\r\n      \"computerName\": \"TESTMACHINE\",\r\n      \"adminPassword\": \"Tester99Password00\",\r\n      \"windowsConfiguration\": {\r\n        \"provisionVMAgent\": true,\r\n        \"enableAutomaticUpdates\": true,\r\n        \"patchSettings\": {\r\n          \"patchMode\": \"AutomaticByOS\"\r\n        }\r\n      }\r\n    },\r\n    \"networkProfile\": {\r\n      \"networkInterfaces\": [\r\n        {\r\n          \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/networkInterfaces/{{networkInterfaceName}}\",\r\n          \"properties\": {\r\n            \"primary\": true\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  },\r\n       \"tags\": {\r\n      \"costCentre\": \"14483\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Compute/virtualMachines/TESTINGMACHINE001?api-version=2020-12-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.Compute",
+						"virtualMachines",
+						"TESTINGMACHINE001"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-12-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE - VirtualMachines",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Compute/virtualMachines/TESTMACHINE?api-version=2020-12-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.Compute",
+						"virtualMachines",
+						"TESTMACHINE"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-12-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - PublicIPNetworkInterface",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"var policyAssignments = responseJson.error.additionalInfo\r",
+							"\r",
+							"pm.test(\"Test to display if the public ip is denied with the policy rule denyPublicIPforNIC\", function () {\r",
+							"    \r",
+							"var i;\r",
+							"\r",
+							"for (i = 0; i < policyAssignments.length; i++) {\r",
+							"  \r",
+							"    var policyAssignmentName = responseJson.error.additionalInfo[i].info.policyDefinitionDisplayName;\r",
+							"\r",
+							"    if(policyAssignmentName.includes(\"denyPublicIPforNIC\"))\r",
+							"    {\r",
+							"        console.log(\"Test Passed with the \"+ policyAssignmentName +\" name returned\")\r",
+							"    }\r",
+							"\r",
+							"}\r",
+							"\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"properties\": {\r\n    \"enableAcceleratedNetworking\": true,\r\n    \"ipConfigurations\": [\r\n      {\r\n        \"name\": \"ipconfig1\",\r\n        \"properties\": {\r\n          \"publicIPAddress\": {\r\n            \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/publicIPAddresses/TestingpublicIP\"\r\n          },\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/virtualNetworks/TestVn/subnets/default\"\r\n          }\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"location\": \"australiacentral\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/networkInterfaces/test-network?api-version=2021-02-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.Network",
+						"networkInterfaces",
+						"test-network"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2021-02-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - PublicIP Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 403\", () => {\r",
+							"  pm.expect(pm.response.code).to.eql(403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify the policy that kicks of forbidden status\",() => {\r",
+							"\r",
+							"    const msg = responseJson.error.message\r",
+							"\r",
+							"  pm.expect(msg).to.include(\"denyPublicIP\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"properties\": {\r\n    \"publicIPAllocationMethod\": \"Static\",\r\n    \"idleTimeoutInMinutes\": 10,\r\n    \"publicIPAddressVersion\": \"IPv4\"\r\n  },\r\n  \"sku\": {\r\n    \"name\": \"Standard\",\r\n    \"tier\": \"Global\"\r\n  },\r\n  \"location\": \"australiacentral\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Network/publicIPAddresses/test-ip?api-version=2020-07-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"Microsoft.Network",
+						"publicIPAddresses",
+						"test-ip"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-07-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TEST - CreateActionGroup with non-domain email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 403\", () => {\r",
+							"  pm.expect(pm.response.code).to.eql(403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify the policy that kicks of forbidden status\",() => {\r",
+							"\r",
+							"    const msg = responseJson.error.message\r",
+							"\r",
+							"  pm.expect(msg).to.include(\"permittedEmailDomainsForActionGroupsAssignment\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify the domain value as per the policy rule\", function () {\r",
+							"\r",
+							"var additionalInfo = responseJson.error.additionalInfo;\r",
+							"\r",
+							"for (var i = 0; i < additionalInfo.length; i++) {\r",
+							"              \r",
+							"    var validEmailDomain = additionalInfo[i].info.policyAssignmentParameters.validEmailDomains;\r",
+							"\r",
+							"    for (var j = 0; j < validEmailDomain.length; j++) {\r",
+							"\r",
+							"       var validValues = validEmailDomain.value[j];\r",
+							"\r",
+							"    pm.expect(validValues).to.include(\"nzdf.mil.nz\");\r",
+							"\r",
+							"    }\r",
+							"\r",
+							"    }\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"location\": \"global\",\r\n  \"tags\": {\"costCentre\": \"14483\"},\r\n  \"properties\": {\r\n    \"groupShortName\": \"sample\",\r\n    \"enabled\": true,\r\n    \"emailReceivers\": [\r\n      {\r\n        \"name\": \"Test email1\",\r\n        \"emailAddress\": \"Test1@yahoo.co.in\",\r\n        \"useCommonAlertSchema\": false\r\n      },\r\n      {\r\n        \"name\": \"Test email2\",\r\n        \"emailAddress\": \"Test2@yahoo.co.in\",\r\n        \"useCommonAlertSchema\": true\r\n      }\r\n    ]\r\n  } \r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/{{subscriptionID}}/resourceGroups/{{resourceGroup}}/providers/microsoft.insights/actionGroups/TestActionGroup?api-version=2019-06-01",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"{{subscriptionID}}",
+						"resourceGroups",
+						"{{resourceGroup}}",
+						"providers",
+						"microsoft.insights",
+						"actionGroups",
+						"TestActionGroup"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2019-06-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"token\", responseJson.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": " client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{clientID}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{clientSecret}}",
+							"type": "text"
+						},
+						{
+							"key": "resource",
+							"value": " https://management.azure.com/",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{microsoftLoginUri}}/{{directoryID}}/oauth2/token",
+					"host": [
+						"{{microsoftLoginUri}}"
+					],
+					"path": [
+						"{{directoryID}}",
+						"oauth2",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"const getLoginUri = pm.globals.get(\"microsoftLoginUri\");",
+					"const getAzurMgmgtUri = pm.globals.get(\"azureManagementUri\");",
+					"const getDirectoryId = pm.globals.get(\"directoryID\");",
+					"const getClientId = pm.globals.get(\"clientID\");",
+					"const getClientSecret = pm.globals.get(\"clientSecret\");",
+					"",
+					"const tokenUrl = getLoginUri+\"/\"+getDirectoryId+\"/oauth2/token\";",
+					"",
+					"const clientId = getClientId;",
+					"const clientSecret = getClientSecret;",
+					"",
+					"    const getTokenRequest = {",
+					"  method: 'POST',",
+					"  url: tokenUrl,",
+					"  body: {",
+					"      mode: 'formdata',",
+					"      formdata: [",
+					"          { key: 'grant_type', value: 'client_credentials' },",
+					"          { key: 'client_id', value: clientId },",
+					"          { key: 'client_secret', value: clientSecret },",
+					"          { key:'resource', value: getAzurMgmgtUri}",
+					"      ]",
+					"  }",
+					"};",
+					"",
+					"pm.sendRequest(getTokenRequest, (err, response) => {",
+					"  const jsonResponse = response.json();",
+					"  const newAccessToken = jsonResponse.access_token;",
+					"",
+					"  pm.variables.set('access_token', newAccessToken);",
+					"",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
